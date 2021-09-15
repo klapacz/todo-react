@@ -1,11 +1,13 @@
 import { Box, Paper, TextField } from '@material-ui/core';
+import { useAtom } from 'jotai';
 import React from 'react'
 import { useForm } from 'react-hook-form';
-import { useAddTodo } from '../store'
+import { addTodoAtom } from '../store'
 
 export default function AddTodoForm() {
-  const addTodo = useAddTodo()
+  const [,addTodo] = useAtom(addTodoAtom)
   const { register, handleSubmit, reset } = useForm();
+
   const onSubmit = ({ text }) => {
     addTodo(text)
     reset()

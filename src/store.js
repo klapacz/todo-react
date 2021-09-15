@@ -1,19 +1,19 @@
-import { useAtom } from "jotai"
+import { atom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 
 export const todosAtom = atomWithStorage('todos', [])
 
-export function useAddTodo() {
-  const [, setTodos] = useAtom(todosAtom)
-  return (text) =>
-    setTodos(todos => [
-      ...todos,
+export const addTodoAtom = atom(
+  null,
+  (get, set, text) =>
+    set(todosAtom, [
+      ...get(todosAtom),
       { id: Date.now(), text },
     ])
-}
+)
 
-export function useDeleteTodo() {
-  const [, setTodos] = useAtom(todosAtom)
-  return (id) =>
-    setTodos(todos => todos.filter(todo => todo.id !== id))
-}
+export const deleteTodoAtom = atom(
+  null,
+  (get, set, id) =>
+    set(todosAtom, get(todosAtom).filter(todo => todo.id !== id))
+)

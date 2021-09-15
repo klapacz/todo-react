@@ -3,11 +3,11 @@ import { IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, Pape
 import React from 'react'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useAtom } from 'jotai';
-import { todosAtom, useDeleteTodo } from './store'
+import { todosAtom, deleteTodoAtom } from '../store'
 
 export default function TodosList() {
   const [todos] = useAtom(todosAtom)
-  const deleteTodo = useDeleteTodo()
+  const [,deleteTodo] = useAtom(deleteTodoAtom)
 
   return (
     <Paper>
