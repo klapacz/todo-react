@@ -1,25 +1,19 @@
-import { Box, Container, FormControl, FormHelperText, IconButton, Input, InputLabel, List, ListItem, ListItemSecondaryAction, ListItemText, Paper, Typography } from '@material-ui/core';
-import { useFormik } from 'formik';
+import { Box, Container, FormControl, FormHelperText, IconButton, Input, InputLabel, List, ListItem, ListItemSecondaryAction, ListItemText, Paper, TextField, Typography } from '@material-ui/core';
 import React from 'react'
 import { useLocalStorage } from './hooks/useLocalStorage';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useForm } from 'react-hook-form';
 
 function App() {
   const [todos, setTodos] = useLocalStorage('todos', [])
-
-  const formik = useFormik({
-    initialValues: {
-      text: '',
-    },
-    onSubmit: ({ text }, { resetForm }) => {
-      if (!text) return;
-      setTodos(todos => [...todos, {
-        id: Date.now(),
-        text
-      }])
-      resetForm()
-    },
-  });
+  const { register, handleSubmit, reset } = useForm();
+  const onSubmit = ({ text }) => {
+    setTodos(todos => [...todos, {
+      id: Date.now(),
+      text
+    }]);
+    reset()
+  }
 
   const deleteTodo = (id) => {
     setTodos(todos => todos.filter(todo => todo.id !== id))
@@ -36,16 +30,13 @@ function App() {
       <Box mb={2}>
         <Paper>
           <Box py={1} px={2}>
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth={true}>
-                <InputLabel htmlFor="todo-text">Add todo</InputLabel>
-                <Input
-                  id="todo-text"
-                  name="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.text}
+                <TextField
+                  {...register("text", { required: true })}
+                  label="Add todo"
+                  helperText="Hit enter to add todo"
                 />
-                <FormHelperText>Hit enter to add todo</FormHelperText>
               </FormControl>
             </form>
           </Box>
