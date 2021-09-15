@@ -3,10 +3,19 @@ import React from 'react'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useForm } from 'react-hook-form';
 import { atomWithStorage } from 'jotai/utils'
-import { useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 
 
 const todosAtom = atomWithStorage('todos', [])
+
+const addTodoAtom = atom(
+  null,
+  (get, set, text) => set(todosAtom, [
+    { id: Date.now(), text },
+    ...get(todosAtom)
+  ])
+)
+
 
 function TodosList() {
   const [todos, setTodos] = useAtom(todosAtom)
@@ -33,13 +42,10 @@ function TodosList() {
 }
 
 function App() {
-  const [, setTodos] = useAtom(todosAtom)
+  const [, addTodo] = useAtom(addTodoAtom)
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = ({ text }) => {
-    setTodos(todos => [...todos, {
-      id: Date.now(),
-      text
-    }]);
+    addTodo(text);
     reset()
   }
 
