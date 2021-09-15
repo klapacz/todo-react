@@ -31,13 +31,12 @@ function App() {
         <Paper>
           <Box py={1} px={2}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl fullWidth={true}>
-                <TextField
-                  {...register("text", { required: true })}
-                  label="Add todo"
-                  helperText="Hit enter to add todo"
-                />
-              </FormControl>
+              <TextField
+                {...register("text", { required: true })}
+                fullWidth
+                label="Add todo"
+                helperText="Hit enter to add todo"
+              />
             </form>
           </Box>
         </Paper>
