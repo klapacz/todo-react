@@ -2,17 +2,13 @@ import { Box, Container, IconButton, List, ListItem, ListItemSecondaryAction, Li
 import React from 'react'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useForm } from 'react-hook-form';
-import { atomWithStorage } from 'jotai/utils'
 import { useAtom } from 'jotai';
+import { todosAtom, useAddTodo, useDeleteTodo } from './store'
 
-
-const todosAtom = atomWithStorage('todos', [])
 
 function TodosList() {
-  const [todos, setTodos] = useAtom(todosAtom)
-
-  const deleteTodo = (id) =>
-    setTodos(todos => todos.filter(todo => todo.id !== id))
+  const [todos] = useAtom(todosAtom)
+  const deleteTodo = useDeleteTodo()
 
   return (
     <Paper>
@@ -33,13 +29,10 @@ function TodosList() {
 }
 
 function App() {
-  const [, setTodos] = useAtom(todosAtom)
+  const addTodo = useAddTodo()
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = ({ text }) => {
-    setTodos(todos => [...todos, {
-      id: Date.now(),
-      text
-    }]);
+    addTodo(text)
     reset()
   }
 
