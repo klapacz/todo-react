@@ -1,19 +1,24 @@
-import { atom } from "jotai"
-import { atomWithStorage } from "jotai/utils"
+import create from "zustand"
+import { persist } from "zustand/middleware"
 
-export const todosAtom = atomWithStorage('todos', [])
+const store = (set, get) => ({
+  todos: [],
 
-export const addTodoAtom = atom(
-  null,
-  (get, set, text) =>
-    set(todosAtom, [
-      ...get(todosAtom),
+  addTodo: (text) => set({
+    todos: [
       { id: Date.now(), text },
-    ])
-)
+      ...get().todos
+    ]
+  }),
 
-export const deleteTodoAtom = atom(
-  null,
-  (get, set, id) =>
-    set(todosAtom, get(todosAtom).filter(todo => todo.id !== id))
-)
+  deleteTodo: (id) => set({
+    todos: get().todos.filter(todo => todo.id !== id)
+  }),
+})
+
+const useStore = create(persist(
+  store,
+  { name: 'todos' },
+))
+
+export default useStore
